@@ -217,7 +217,7 @@ namespace Rito.Tests
         }
 
         /// <summary> 스크린샷을 안 찍고 보여주기 </summary>
-        private void CaptureScreenAndShow(Image destination)
+        public void CaptureScreenAndShow(Image destination)
         {
             Texture2D screenTex = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
             Rect area = new Rect(0f, 0f, Screen.width, Screen.height);
