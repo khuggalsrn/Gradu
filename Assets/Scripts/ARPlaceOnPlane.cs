@@ -20,8 +20,6 @@ public class ARPlaceOnPlane : MonoBehaviour
     public GameObject spawnObject;
     /// <summary> 가상의 공간에 Plane을 놔줄 수 있께 해주는 Class </summary>
     [SerializeField] ARPlaneManager ArPlane;
-    /// <summary> CanInteract가 false일 경우 터치로 인한 상호작용=>InteractByTouch() 이 불가능하다.  </summary>
-    bool CanInteract = true;
     float time = 0f;
     [SerializeField] Text timetext;
     Texture2D screenTex;
@@ -77,53 +75,7 @@ public class ARPlaceOnPlane : MonoBehaviour
         // InteractByTouch();
 
     }
-    /// <summary>
-    /// 두 손가락 터치 시 그곳에 PlaceObject prefab을 생성하여 spawnObject에 지정한다. 이후 spawnObject의 위치만 바꾼다.
-    /// </summary>
-    void InteractByTouch()
-    {
-        if (true)
-        {
-            if (Input.touchCount > 0)
-            {
-                IsStop = !IsStop;
-                // Touch touch = Input.GetTouch(0);
-                // touchposUI.text = touch.position.ToString() + "w " + Screen.width.ToString() + "/h  " + Screen.height.ToString();
-                // List<ARRaycastHit> hits = new List<ARRaycastHit>();
-                // if (ArRaycaster.Raycast(touch.position, hits, TrackableType.Planes))
-                // {
-                //     Pose hitPose = hits[0].pose;
-                //     if (!spawnObject)
-                //     {
-                //         spawnObject = PlaceObject;
-                //     }
-                //     else
-                //     {
-                //         spawnObject.transform.SetPositionAndRotation(hitPose.position, Quaternion.Euler(-90,-180,0));
-                //     }
-
-                // }
-
-            }
-        }
-    }
-    // void UpdateCenterObject()
-    // {
-    //     Vector3 screenCenter = Camera.current.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
-    //     List<ARRaycastHit> hits = new List<ARRaycastHit>();
-    //     ArRaycaster.Raycast(screenCenter, hits, TrackableType.Planes);
-
-    //     if (hits.Count > 0)
-    //     {
-    //         Pose placementPose = hits[0].pose;
-    //         PlaceObject.SetActive(true);
-    //         PlaceObject.transform.SetPositionAndRotation(placementPose.position, placementPose.rotation);
-    //     }
-    //     // else
-    //     // {
-    //     //     PlaceObject.SetActive(false);
-    //     // }
-    // }
+        
     private IEnumerator ReadScreen()
     {
         yield return new WaitForEndOfFrame();
