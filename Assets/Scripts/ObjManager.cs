@@ -2,8 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.ComponentModel.Design;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.IO;
 using UnityEngine.XR.ARFoundation;
-
+using UnityEngine.XR.ARSubsystems;
 public class ObjManager : MonoBehaviour
 {
     /// <summary> Ray를 쏴서 물체를 탐색할 수 있게 해주는 Class </summary>
@@ -45,11 +49,12 @@ public class ObjManager : MonoBehaviour
     public void CanSpawn(Color clr)
     {
         Debug.Log("CanSpawn?");
-        if (80/255 <= clr.r && // 0.3137... 0.31 < r < 0.43
-         clr.r <= 110/255 && // 0.43137...
-           35/255 <= clr.g && // 0.13725... 0.13 < g < 0.23
-           clr.g <= 60/255 && // 0.23529...
-            clr.b <= 30/255) // 0.05882 ... b < 0.1 갈색.
+        if (0.25f <= clr.r && // 0.... 0.31 < r < 0.43
+         clr.r <= 0.43f && // 0....
+           0.13f <= clr.g && // 0.... 0.13 < g < 0.35
+           clr.g <= 0.35f && // 0....
+            clr.b >= 0.07f && 
+            clr.b <= 0.274f) // 0. ... 0.07 < b < 0.274 갈색.
         {
             Debug.Log("Spawn!");
             Spawn(0, clr);
@@ -63,10 +68,12 @@ public class ObjManager : MonoBehaviour
     void Spawn(int objnum, Color clr)
     {
 #if UNITY_EDITOR
+        if(IsSpawnObjList[objnum]) return;
         GameObject obj = Instantiate(ObjList[objnum]);
         Material mat = ObjMatList[objnum];
         Vector3 AddDegree = ObjDegreeList[objnum];
         Vector3 AddLoc = Vector3.zero;
+        IsSpawnObjList[objnum] = true;
         switch (objnum)
         {
             case 0:
@@ -82,7 +89,7 @@ public class ObjManager : MonoBehaviour
         obj.transform.localScale /= 2;
         obj.transform.SetPositionAndRotation(AddLoc, Quaternion.Euler(AddDegree));
 #else
-        // if(IsSpawnObjList[objnum]) return;
+        if(IsSpawnObjList[objnum]) return;
         Vector2 RayPos = new Vector2(3 * Screen.width / 4, 3 * Screen.height / 4);
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
@@ -94,21 +101,26 @@ public class ObjManager : MonoBehaviour
             Material mat = ObjMatList[objnum];
             Vector3 AddDegree = ObjDegreeList[objnum];
             Vector3 AddLoc = Vector3.zero;
-            
+
+            if(clr.a < 1f){ // 밝은곳은 a값이 1임 더 낮다는곳은 어두운 곳이었다는 것
+                clr.r *= 1 / Mathf.Pow(1 + 1.3f *(0.4f -(clr.a - 0.6f)), 2); // 어두운 곳에서
+                clr.g *= 1 / Mathf.Pow(1 + 1.3f *(0.4f -(clr.a - 0.6f)), 2);
+                clr.b *= 1 / Mathf.Pow(1 + 1.3f *(0.4f -(clr.a - 0.6f)), 2);
+            }
+
             switch(objnum){
                 case 0:
-                    AddLoc = new Vector3(0,ArCam.transform.position.y,0); //ObjLocList[objnum]+ 
+                    AddLoc = ObjLocList[objnum]; //ObjLocList[objnum]+ 
                     break;
                 case 1:
-                    AddLoc = new Vector3(0,ArCam.transform.position.y - hitPose.position.y -ObjLocList[1].y,0); //ObjLocList[objnum]+ 
+                    AddLoc = new Vector3(0,ArCam.transform.position.y - hitPose.position.y -ObjLocList[1].y,0);
+                    mat.color = clr;
                     break;
                 default:
                     break;
             }
             obj.transform.localScale /= 2;
-            mat.color = clr;
-            if(clr.a < 1f) // 밝은곳은 a값이 1임 더 낮다는곳은 어두운 곳이었다는 것
-                mat.color *= 1 / Mathf.pow(1 + 1.3f *(0.4f -(clr.a - 0.6f)), 2); // 어두운 곳에서
+            
             // 빛의 밝기가 A였고 0.6f를 더한 값이 왔으므로 0.6빼면
             // 빛의 밝기값이 오는 것.
             // 그것에 가중치를 곱하고 매태리얼 컬러가 밝기에따라 어둡게 변하도록함.
