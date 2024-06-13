@@ -103,9 +103,9 @@ public class ObjManager : MonoBehaviour
             Vector3 AddLoc = Vector3.zero;
 
             if(clr.a < 1f){ // 밝은곳은 a값이 1임 더 낮다는곳은 어두운 곳이었다는 것
-                clr.r *= 1 / Mathf.Pow(1 + 1.3f *(0.4f -(clr.a - 0.6f)), 2); // 어두운 곳에서
-                clr.g *= 1 / Mathf.Pow(1 + 1.3f *(0.4f -(clr.a - 0.6f)), 2);
-                clr.b *= 1 / Mathf.Pow(1 + 1.3f *(0.4f -(clr.a - 0.6f)), 2);
+                clr.r *= 1 / Mathf.Pow(1 + 1.3f *(0.4f -(clr.a - 0.6f)), 3); // 어두운 곳에서
+                clr.g *= 1 / Mathf.Pow(1 + 1.3f *(0.4f -(clr.a - 0.6f)), 3);
+                clr.b *= 1 / Mathf.Pow(1 + 1.3f *(0.4f -(clr.a - 0.6f)), 3);
             }
 
             switch(objnum){
