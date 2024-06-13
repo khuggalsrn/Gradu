@@ -11,7 +11,7 @@ using System.IO;
 public class LightManager : MonoBehaviour
 {
     public ARCameraManager aRCameraManager;
-    public Text textUI;
+    public Text textUI; // Light Estimation
     [SerializeField] Test_ScreenShot t_ss;
     public Image destination;
     private Texture2D _imageTexture; // destination 소스 텍스쳐
@@ -19,7 +19,6 @@ public class LightManager : MonoBehaviour
     {
         aRCameraManager.frameReceived += FrameLightUpdated;
 
-        // 현재 스크린으로부터 지정 영역의 픽셀들을 텍스쳐에 저장
     }
     public void FrameLightUpdated(ARCameraFrameEventArgs args)
     {
@@ -27,7 +26,7 @@ public class LightManager : MonoBehaviour
         var color = args.lightEstimation.mainLightColor;
         if (brightness.HasValue)
         {
-            textUI.text = brightness.Value.ToString();
+            textUI.text = brightness.Value.ToString(); // 밝기 값
         }
         if (color.HasValue)
         {   
